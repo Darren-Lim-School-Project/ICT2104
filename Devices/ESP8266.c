@@ -36,14 +36,13 @@ bool ESP8266_WaitForAnswer(uint32_t Tries)
     uint32_t c;
     uint32_t i = 0;
 
-    while(Tries)
+    while(Tries)//10
     {
-        if(UARTA2WriteIndex - UARTA2ReadIndex){
-
-            while(UARTA2WriteIndex - UARTA2ReadIndex){
+        if(UART_Available(EUSCI_A2_BASE)){
+            while(UART_Available(EUSCI_A2_BASE)){
                 UART_Read(EUSCI_A2_BASE, (uint8_t*)&c, 1);
 
-                if(i > ESP8266_BUFFER_SIZE)
+                if(i > ESP8266_BUFFER_SIZE) //2048
                 {
                     return false;
                 }
@@ -57,7 +56,7 @@ bool ESP8266_WaitForAnswer(uint32_t Tries)
             return true;
         }
         Tries--;
-        __delay_cycles(2400*10);
+        __delay_cycles(2400);
     }
 
     return false;
@@ -74,6 +73,7 @@ bool ESP8266_CheckConnection(void)
 
     if(strstr(ESP8266_Buffer, "OK") == NULL)
     {
+        MSPrintf(EUSCI_A0_BASE, "Buffer OK\r\n");
         return false;
     }
 
@@ -116,17 +116,19 @@ bool ESP8266_ChangeMode1(void)
 
 bool ESP8266_ConnectToAP(char *SSID, char *Password)
 {
-    UART_Printf(EUSCI_A0_BASE, "Hello\r\n");
     UART_Printf(EUSCI_A0_BASE, "%s=\"%s\",\"%s\"\r\n", AT_CWJAP, SSID, Password);
 
     __delay_cycles(24000000);
 
     if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
     {
+        UART_Printf(EUSCI_A0_BASE, "WaitForAnswer");
         return false;
     }
 
-    if(strstr(ESP8266_Buffer, "WIFI CONNECTED") == NULL)
+    if(strstr(ESP8266_Buffer, "WIFI GOT IP") != NULL) {
+        return true;
+    } else if(strstr(ESP8266_Buffer, "WIFI CONNECTED") == NULL)
     {
         return false;
     }

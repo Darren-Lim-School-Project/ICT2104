@@ -37,25 +37,38 @@ void setUpUART()
     MAP_Interrupt_enableInterrupt(INT_EUSCIA0);
 
     MAP_GPIO_setAsPeripheralModuleFunctionInputPin(
-            GPIO_PORT_P4, GPIO_PIN6 | GPIO_PIN4, GPIO_PRIMARY_MODULE_FUNCTION);
+            GPIO_PORT_P3, GPIO_PIN2 | GPIO_PIN3, GPIO_PRIMARY_MODULE_FUNCTION);
     MAP_UART_initModule(EUSCI_A2_BASE, &UART2Config);
     MAP_UART_enableModule(EUSCI_A2_BASE);
     MAP_UART_enableInterrupt(EUSCI_A2_BASE, EUSCI_A_UART_RECEIVE_INTERRUPT);
     MAP_Interrupt_enableInterrupt(INT_EUSCIA2);
 
     /*Reset GPIO of the ESP8266*/
-    GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN5);
+    GPIO_setAsOutputPin(GPIO_PORT_P6, GPIO_PIN1);
 
     MAP_Interrupt_enableMaster();
 
-    //ESP8266_ConnectToAP("Darren's iPhone", "abcd1234");
+    /*Hard Reset ESP8266*/
+    ESP8266_HardReset();
+    __delay_cycles(48000000);
+    UARTA2WriteIndex = UARTA2ReadIndex = 0;
+
+    /*
+     char *ESP8266_Data = ESP8266_GetBuffer();
+     while (!ESP8266_ConnectToAP("Lim", "weiloowoov")) {
+     MSPrintf(EUSCI_A0_BASE, ESP8266_Data);
+     }
+     MSPrintf(EUSCI_A0_BASE, "Success MSP432 connected to WiFi\r\n"); //connected
+     */
 
     char *ESP8266_Data = ESP8266_GetBuffer();
-    /*Check available Access Points*/
-    while (!ESP8266_ConnectToAP("Darren's iPhone", "abcd1234")) {
+    while (!ESP8266_ConnectToAP("Lim", "weiloowoov")) //keep trying to connect
+    {
         MSPrintf(EUSCI_A0_BASE, ESP8266_Data);
     }
-    MSPrintf(EUSCI_A0_BASE, "Success MSP432 connected to Darren's iPhone\r\n"); //connected
+
+    MSPrintf(EUSCI_A0_BASE, "Successfully connect to WiFi\r\n"); //connected
+    __delay_cycles(48000000);
 
     /*Start ESP8266 serial terminal, will not return*/
     ESP8266_Terminal();

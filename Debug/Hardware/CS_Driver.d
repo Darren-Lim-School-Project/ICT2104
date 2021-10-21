@@ -3,17 +3,17 @@
 Hardware/CS_Driver.obj: ../Hardware/CS_Driver.c
 Hardware/CS_Driver.obj: ../Hardware/CS_Driver.h
 Hardware/CS_Driver.obj: C:/ti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/devices/msp432p4xx/driverlib/cs.h
-Hardware/CS_Driver.obj: C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdint.h
-Hardware/CS_Driver.obj: C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/_ti_config.h
-Hardware/CS_Driver.obj: C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/linkage.h
-Hardware/CS_Driver.obj: C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/_stdint40.h
-Hardware/CS_Driver.obj: C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/stdint.h
-Hardware/CS_Driver.obj: C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/cdefs.h
-Hardware/CS_Driver.obj: C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_types.h
-Hardware/CS_Driver.obj: C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_types.h
-Hardware/CS_Driver.obj: C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_stdint.h
-Hardware/CS_Driver.obj: C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h
-Hardware/CS_Driver.obj: C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdbool.h
+Hardware/CS_Driver.obj: C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdint.h
+Hardware/CS_Driver.obj: C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/_ti_config.h
+Hardware/CS_Driver.obj: C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/linkage.h
+Hardware/CS_Driver.obj: C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/_stdint40.h
+Hardware/CS_Driver.obj: C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/stdint.h
+Hardware/CS_Driver.obj: C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/cdefs.h
+Hardware/CS_Driver.obj: C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_types.h
+Hardware/CS_Driver.obj: C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_types.h
+Hardware/CS_Driver.obj: C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_stdint.h
+Hardware/CS_Driver.obj: C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h
+Hardware/CS_Driver.obj: C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdbool.h
 Hardware/CS_Driver.obj: C:/ti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/devices/msp432p4xx/inc/msp.h
 Hardware/CS_Driver.obj: C:/ti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/devices/msp432p4xx/inc/msp432p401r.h
 Hardware/CS_Driver.obj: C:/ti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/devices/msp432p4xx/inc/msp_compatibility.h
@@ -33,27 +33,27 @@ Hardware/CS_Driver.obj: C:/ti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/devic
 
 C:/ti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/devices/msp432p4xx/driverlib/cs.h:
 
-C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdint.h:
+C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdint.h:
 
-C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/_ti_config.h:
+C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/_ti_config.h:
 
-C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/linkage.h:
+C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/linkage.h:
 
-C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/_stdint40.h:
+C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/_stdint40.h:
 
-C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/stdint.h:
+C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/stdint.h:
 
-C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/cdefs.h:
+C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/cdefs.h:
 
-C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_types.h:
+C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_types.h:
 
-C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_types.h:
+C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_types.h:
 
-C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_stdint.h:
+C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/machine/_stdint.h:
 
-C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h:
+C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/sys/_stdint.h:
 
-C:/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdbool.h:
+C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdbool.h:
 
 C:/ti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/devices/msp432p4xx/inc/msp.h:
 

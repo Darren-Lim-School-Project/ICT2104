@@ -76,6 +76,33 @@ uint32_t UART_Read(uint32_t UART, uint8_t *Data, uint32_t Size)
     return i;
 }
 
+uint32_t UART_Available(uint32_t UART)
+{
+    switch(UART)
+    {
+    case EUSCI_A0_BASE:
+        return UARTA0WriteIndex - UARTA0ReadIndex;
+    case EUSCI_A2_BASE:
+        return UARTA2WriteIndex - UARTA2ReadIndex;
+    /*More UART available modules go here*/
+    default:
+        return 0;
+    }
+}
+
+void UART_Flush(uint32_t UART)
+{
+    switch(UART)
+    {
+    case EUSCI_A0_BASE:
+        UARTA0WriteIndex = UARTA0ReadIndex = 0;
+        break;
+    case EUSCI_A2_BASE:
+        UARTA2WriteIndex = UARTA2ReadIndex = 0;
+        break;
+    }
+}
+
 /*A basic gets for the MSP432. In order to use it properly you need to initialize the correct UART peripheral.
  * USAGE...
  * UART_Gets(EUSCI_A0_BASE, InputBuffer, SizeOfInputBuffer)*/

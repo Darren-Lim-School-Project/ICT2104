@@ -9,7 +9,7 @@
 #define UART_H_
 
 
-setUpUART();
+init_UART();
 
 
 #endif /* UART_H_ */

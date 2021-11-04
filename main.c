@@ -60,7 +60,8 @@
 
 // Global Variable for Wheel. 20 = 1 round.
 volatile static uint32_t counter;
-//bool test = false;
+
+#define TEST;
 
 inline void uart_println(const char *str, ...)
 {
@@ -88,12 +89,22 @@ int main(void)
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD; // Disable watchdog
 
-    init_wheel(BIT0, BIT1, BIT2, BIT3);  // Output for Wheels
-    //init_PWM(BIT2, BIT4);   // Output for PWMs
+    init_wheel(BIT0, BIT1, BIT2, BIT3);     // Initialize Wheels
+
+#ifdef TEST
+    printf("Wheels initialization completed\r\n");
+#endif
     //setUpPWM();
+    //init_PWM(BIT2, BIT4);                 // Output for PWMs
+    //printf("PWM initialization completed");
+
+    init_UART();                            // Initialize UART
+    printf("UART initialization completed\r\n");
+
+    init_ultrasonic();
+    printf("Ultrasonic initialization completed\r\n");
 
     counter = 0;
-    setUpUART();
 
     /////* for uart_println */////
     // init UART (LSB first, 1 stop bit, no parity, 8-bit characters, 115200 baud)
@@ -109,7 +120,7 @@ int main(void)
 
     // Setting Interrupt to trigger only at Rising Edge.
     GPIO_interruptEdgeSelect(GPIO_PORT_P1, GPIO_PIN1,
-                             GPIO_LOW_TO_HIGH_TRANSITION);
+    GPIO_LOW_TO_HIGH_TRANSITION);
 
     // P1.0 Output Pin
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);

@@ -16,6 +16,7 @@
 
 bool ESP8266_CheckConnection(void);
 bool ESP8266_AvailableAPs(void);
+bool ESP8266_Disconnect(void);
 bool ESP8266_ConnectToAP(char *SSID, char *Password);
 bool ESP8266_EstablishConnection(char ID, uint8_t type, char *address, char *port);
 bool ESP8266_EnableMultipleConnections(bool Enable);

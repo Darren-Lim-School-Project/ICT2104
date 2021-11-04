@@ -18,7 +18,7 @@ eUSCI_UART_ConfigV1 UART2Config = {
         EUSCI_A_UART_MODE,
         EUSCI_A_UART_OVERSAMPLING_BAUDRATE_GENERATION };
 
-void setUpUART()
+void init_UART()
 {
     MAP_WDT_A_holdTimer();
 
@@ -53,16 +53,12 @@ void setUpUART()
     __delay_cycles(48000000);
     UARTA2WriteIndex = UARTA2ReadIndex = 0;
 
-    /*
-     char *ESP8266_Data = ESP8266_GetBuffer();
-     while (!ESP8266_ConnectToAP("Lim", "weiloowoov")) {
-     MSPrintf(EUSCI_A0_BASE, ESP8266_Data);
-     }
-     MSPrintf(EUSCI_A0_BASE, "Success MSP432 connected to WiFi\r\n"); //connected
-     */
+    printf("SMCLK: %d\n", CS_getSMCLK());
 
     char *ESP8266_Data = ESP8266_GetBuffer();
-    while (!ESP8266_ConnectToAP("Lim", "weiloowoov")) //keep trying to connect
+    ESP8266_Disconnect();
+
+    if (!ESP8266_ConnectToAP("Lim", "weiloowoov")) //keep trying to connect
     {
         MSPrintf(EUSCI_A0_BASE, ESP8266_Data);
     }

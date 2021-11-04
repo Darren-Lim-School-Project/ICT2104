@@ -114,6 +114,23 @@ bool ESP8266_ChangeMode1(void)
     return true;
 }
 
+bool ESP8266_Disconnect(void)
+{
+    UART_Printf(EUSCI_A2_BASE, "AT+CWQAP\r\n");
+    __delay_cycles(48000000);
+    if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
+    {
+        return false;
+    }
+
+    if(strstr(ESP8266_Buffer, "OK") == NULL)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 bool ESP8266_ConnectToAP(char *SSID, char *Password)
 {
     UART_Printf(EUSCI_A0_BASE, "%s=\"%s\",\"%s\"\r\n", AT_CWJAP, SSID, Password);
@@ -122,7 +139,6 @@ bool ESP8266_ConnectToAP(char *SSID, char *Password)
 
     if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
     {
-        UART_Printf(EUSCI_A0_BASE, "WaitForAnswer");
         return false;
     }
 

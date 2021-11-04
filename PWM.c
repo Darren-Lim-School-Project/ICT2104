@@ -11,10 +11,12 @@
 
 /* Timer_A PWM Configuration Parameter */
 Timer_A_PWMConfig pwmConfig = {
-TIMER_A_CLOCKSOURCE_SMCLK,
-                                TIMER_A_CLOCKSOURCE_DIVIDER_24, 10000,
+                                TIMER_A_CLOCKSOURCE_SMCLK,
+                                TIMER_A_CLOCKSOURCE_DIVIDER_24,
+                                10000,
                                 TIMER_A_CAPTURECOMPARE_REGISTER_1,
-                                TIMER_A_OUTPUTMODE_RESET_SET, 1000 };
+                                TIMER_A_OUTPUTMODE_RESET_SET,
+                                1000};
 
 Timer_A_PWMConfig pwmConfig_B = {
 TIMER_A_CLOCKSOURCE_SMCLK,
@@ -22,13 +24,17 @@ TIMER_A_CLOCKSOURCE_SMCLK,
                                   TIMER_A_CAPTURECOMPARE_REGISTER_1,
                                   TIMER_A_OUTPUTMODE_RESET_SET, 1000 };
 
-void init_wheel(uint16_t rightWheelBackward, uint16_t rightWheelForward, uint16_t leftWheelForward, uint16_t leftWheelBackward) {
-    P4DIR |= rightWheelBackward + rightWheelForward + leftWheelForward + leftWheelBackward; // Output for the 4 pins
+void init_wheel(uint16_t rightWheelBackward, uint16_t rightWheelForward,
+                uint16_t leftWheelForward, uint16_t leftWheelBackward)
+{
+    P4DIR |= rightWheelBackward + rightWheelForward + leftWheelForward
+            + leftWheelBackward; // Output for the 4 pins
     P2DIR |= BIT4 + BIT6;
 
     //P4OUT |= leftWheelForward;
     //P4OUT &= ~leftWheelBackward;]
-    P4OUT &= ~(rightWheelBackward + rightWheelForward + leftWheelForward + leftWheelBackward); // To stop all 4 wheels
+    P4OUT &= ~(rightWheelBackward + rightWheelForward + leftWheelForward
+            + leftWheelBackward); // To stop all 4 wheels
 
     //P4OUT |= leftWheelForward + rightWheelForward;
 
@@ -36,6 +42,8 @@ void init_wheel(uint16_t rightWheelBackward, uint16_t rightWheelForward, uint16_
 
 void setUpPWM()
 {
+    int a = CS_getSMCLK();
+    printf("SMCLK: %d\n", a);
     // Start of PWM - Left Motor
     /* Configuring P4.4 and P4.5 as Output. P2.4 as peripheral output for PWM and P1.1 for button interrupt */
     GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN4);

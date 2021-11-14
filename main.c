@@ -61,8 +61,6 @@
 // Global Variable for Wheel. 20 = 1 round.
 volatile static uint32_t counter;
 
-#define TEST;
-
 inline void uart_println(const char *str, ...)
 {
     static char print_buffer[256];
@@ -89,63 +87,27 @@ int main(void)
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD; // Disable watchdog
 
-    init_wheel(BIT0, BIT1, BIT2, BIT3);     // Initialize Wheels
+    //init_wheel(BIT0, BIT1, BIT2, BIT3);     // Initialize Wheels
+    //printf("Wheels initialization completed");
 
-#ifdef TEST
-    printf("Wheels initialization completed\r\n");
-#endif
-    //setUpPWM();
-    //init_PWM(BIT2, BIT4);                 // Output for PWMs
+    //init_PWM(BIT4, BIT6);                 // Output for PWMs
     //printf("PWM initialization completed");
 
-    init_UART();                            // Initialize UART
-    printf("UART initialization completed\r\n");
+    //init_UART();                            // Initialize UART
+    //printf("UART initialization completed\r\n");
 
+    printf("Before\r\n");
     init_ultrasonic();
+    printf("After");
     printf("Ultrasonic initialization completed\r\n");
 
-    counter = 0;
+    while (1) {
 
-    /////* for uart_println */////
-    // init UART (LSB first, 1 stop bit, no parity, 8-bit characters, 115200 baud)
-    P1SEL0 = 0x0c;
-    UCA0CTLW0 = UCSWRST | EUSCI_A_CTLW0_SSEL__SMCLK;
-    UCA0BRW = (uint16_t) ((uint32_t) 3000000 / 115200);
-    UCA0MCTLW = 0;
-    UCA0CTLW0 &= ~UCSWRST;
-    /////* for uart_println */////
-
-    // P2.5 Input Pin
-    GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P2, GPIO_PIN5); // Set P1.1 as input (Switch 1)
-
-    // Setting Interrupt to trigger only at Rising Edge.
-    GPIO_interruptEdgeSelect(GPIO_PORT_P1, GPIO_PIN1,
-    GPIO_LOW_TO_HIGH_TRANSITION);
-
-    // P1.0 Output Pin
-    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
-
-    // Clear Interrupt Flag Pin 2.5
-    GPIO_clearInterruptFlag(GPIO_PORT_P2, GPIO_PIN5);
-
-    // Enabling Interrupt for Pin 2.5
-    GPIO_enableInterrupt(GPIO_PORT_P2, GPIO_PIN5);
-
-    // Enable Interrupt for Port 2
-    Interrupt_enableInterrupt(INT_PORT2);
-
-    // Enable Master Interrupt
-    Interrupt_enableMaster();
-
-    // Forever Loop the Low Power Mode State 3
-    while (1)
-    {
-        PCM_gotoLPM0();
-        PCM_gotoLPM3();
     }
 }
 
 // Port 2 ISR
+/*
 void PORT2_IRQHandler(void)
 {
     // Local Variable to store status of Interrupt
@@ -168,3 +130,4 @@ void PORT2_IRQHandler(void)
     // Clearing Interrupt Flag
     GPIO_clearInterruptFlag(GPIO_PORT_P2, GPIO_PIN5);
 }
+*/

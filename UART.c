@@ -26,6 +26,11 @@ void init_UART()
     FlashCtl_setWaitState(FLASH_BANK0, 2);
     FlashCtl_setWaitState(FLASH_BANK1, 2);
     PCM_setCoreVoltageLevel(PCM_VCORE1);
+
+    int a = CS_getSMCLK();
+    printf("UART SMCLK: %d\n", a);
+
+
     CS_setDCOCenteredFrequency(CS_DCO_FREQUENCY_24);
 
     /*Initialize required hardware peripherals for the ESP8266*/
@@ -48,6 +53,8 @@ void init_UART()
 
     MAP_Interrupt_enableMaster();
 
+    ESP8266_Disconnect();
+
     /*Hard Reset ESP8266*/
     ESP8266_HardReset();
     __delay_cycles(48000000);
@@ -56,9 +63,9 @@ void init_UART()
     printf("SMCLK: %d\n", CS_getSMCLK());
 
     char *ESP8266_Data = ESP8266_GetBuffer();
-    ESP8266_Disconnect();
 
     if (!ESP8266_ConnectToAP("Lim", "weiloowoov")) //keep trying to connect
+    //if (!ESP8266_ConnectToAP("SINGTEL-FD58", "weiloowoov")) //keep trying to connect
     {
         MSPrintf(EUSCI_A0_BASE, ESP8266_Data);
     }
@@ -67,5 +74,5 @@ void init_UART()
     __delay_cycles(48000000);
 
     /*Start ESP8266 serial terminal, will not return*/
-    ESP8266_Terminal();
+    //ESP8266_Terminal();
 }

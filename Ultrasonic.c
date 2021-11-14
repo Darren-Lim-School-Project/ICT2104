@@ -64,25 +64,41 @@ static void Delay(uint32_t loop)
 
 // -------------------------------------------------------------------------------------------------------------------
 
-void Initalise_HCSR04(void)
+void init_ultrasonic(void)
 {
     /* Timer_A UpMode Configuration Parameter */
     const Timer_A_UpModeConfig upConfig = {
     TIMER_A_CLOCKSOURCE_SMCLK,              // SMCLK Clock Source
             TIMER_A_CLOCKSOURCE_DIVIDER_3,          // SMCLK/3 = 1MHz
-            TICKPERIOD,                             // 1000 tick period
+            //TIMER_A_CLOCKSOURCE_DIVIDER_12,
+            //10,
+            TICKPERIOD,// 1000 tick period
             TIMER_A_TAIE_INTERRUPT_DISABLE,         // Disable Timer interrupt
             TIMER_A_CCIE_CCR0_INTERRUPT_ENABLE,    // Enable CCR0 interrupt
             TIMER_A_DO_CLEAR                        // Clear value
             };
 
     int a = CS_getSMCLK();
+    printf("Ultrasonic SMCLK: %d\n", a);
+
+    // Test for LED
+    P1DIR |= BIT0;
+    P1OUT &= ~BIT0;
+    //GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
+    //GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0);
 
     /* Configuring P3.6 as Output */
     GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN6);                        //
     GPIO_setOutputLowOnPin(GPIO_PORT_P3, GPIO_PIN6);                        //
 
-    GPIO_setAsInputPinWithPullDownResistor(GPIO_PORT_P3, GPIO_PIN7);
+    // Set Interrupt to calculate distance
+    //GPIO_setAsInputPinWithPullDownResistor(GPIO_PORT_P3, GPIO_PIN7);
+    P3DIR &= ~BIT7;
+    P3IE |= BIT7;
+    P3IES |= BIT7;
+    P3IFG = 0;
+    NVIC->ISER[1] |= 1 << (PORT3_IRQn & 31);
+    Interrupt_enableMaster;
 
     /* Configuring Timer_A0 for Up Mode */
     Timer_A_configureUpMode(TIMER_A0_BASE, &upConfig);
@@ -105,7 +121,7 @@ void TA0_0_IRQHandler(void)
 
     /* Clear interrupt flag */
     Timer_A_clearCaptureCompareInterrupt(TIMER_A0_BASE,
-                                         TIMER_A_CAPTURECOMPARE_REGISTER_0);
+    TIMER_A_CAPTURECOMPARE_REGISTER_0);
 }
 
 // -------------------------------------------------------------------------------------------------------------------
@@ -162,34 +178,51 @@ float getHCSR04Distance(void)
     /* Calculating distance in cm */
     calculateddistance = (float) pulseduration / 58.0f;
 
+    //printf("calculateddistance: %d\r\n", calculateddistance);
     return calculateddistance;
 }
 
-// -------------------------------------------------------------------------------------------------------------------
-
-void init_ultrasonic(void)
+void PORT3_IRQHandler(void)
 {
-    Initalise_HCSR04();
-
-    /* Configure P1.0 and set it to LOW */
-    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
-    GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0);
-
-    while (1)
+    if (P3IFG & BIT7)
     {
         Delay(3000);
-
-        //printf("HCSR04Distance(): %d\r\n", getHCSR04Distance());
-        /* Obtain distance from HCSR04 sensor and check if its less then minimum distance */
-        if ((getHCSR04Distance() < MIN_DISTANCE))
+        if (getHCSR04Distance() < MIN_DISTANCE)
         {
             GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN0);
-            //printf("Near\r\n");
         }
         else
         {
             GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0);
-            //printf("Far\r\n");
         }
     }
+    P3IFG &= ~(BIT7 );
+    //P3IFG = 0;
 }
+
+// -------------------------------------------------------------------------------------------------------------------
+
+/*
+ void init_ultrasonic(void)
+ {
+ Initalise_HCSR04();
+
+ while (1)
+ {
+ //Delay(3000);
+
+ //printf("HCSR04Distance(): %d\r\n", getHCSR04Distance());
+
+ if ((getHCSR04Distance() < MIN_DISTANCE))
+ {
+ GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN0);
+ printf("Near\r\n");
+ }
+ else
+ {
+ GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0);
+ printf("Far\r\n");
+ }
+ }
+ }
+ */

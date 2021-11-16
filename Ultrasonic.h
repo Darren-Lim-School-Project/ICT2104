@@ -8,8 +8,9 @@
 #ifndef ULTRASONIC_H_
 #define ULTRASONIC_H_
 
-
-init_ultrasonic(void);
+void init_ultrasonic(void);
+float getHCSR04Distance(void);
+void usLoop(void);
 
 
 #endif /* ULTRASONIC_H_ */

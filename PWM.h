@@ -8,9 +8,10 @@
 #ifndef PWM_H_
 #define PWM_H_
 
-void init_wheel(uint16_t leftWheelForward, uint16_t leftWheelBackward, uint16_t rightWheelForward, uint16_t rightWheelBackward);
-void init_PWM(uint16_t ENA, uint16_t ENB);
-void PORT1_IRQHandler(void);
-
+//void init_wheel(uint16_t leftWheelForward, uint16_t leftWheelBackward, uint16_t rightWheelForward, uint16_t rightWheelBackward);
+void init_PWM(void);
+void pwmLoop(void);
+void slowDown(void);
+void speedUp(void);
 
 #endif /* PWM_H_ */

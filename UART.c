@@ -27,8 +27,8 @@ void init_UART()
     FlashCtl_setWaitState(FLASH_BANK1, 2);
     PCM_setCoreVoltageLevel(PCM_VCORE1);
 
-    int a = CS_getSMCLK();
-    printf("UART SMCLK: %d\n", a);
+    //int a = CS_getSMCLK();
+    //printf("UART SMCLK: %d\n", a);
 
 
     CS_setDCOCenteredFrequency(CS_DCO_FREQUENCY_24);
@@ -60,19 +60,17 @@ void init_UART()
     __delay_cycles(48000000);
     UARTA2WriteIndex = UARTA2ReadIndex = 0;
 
-    printf("SMCLK: %d\n", CS_getSMCLK());
-
     char *ESP8266_Data = ESP8266_GetBuffer();
 
-    if (!ESP8266_ConnectToAP("Lim", "weiloowoov")) //keep trying to connect
+    //if (!ESP8266_ConnectToAP("Lim", "weiloowoov")) //keep trying to connect
     //if (!ESP8266_ConnectToAP("SINGTEL-FD58", "weiloowoov")) //keep trying to connect
-    {
-        MSPrintf(EUSCI_A0_BASE, ESP8266_Data);
-    }
+    //{
+    //    MSPrintf(EUSCI_A0_BASE, ESP8266_Data);
+    //}
 
-    MSPrintf(EUSCI_A0_BASE, "Successfully connect to WiFi\r\n"); //connected
-    __delay_cycles(48000000);
+    //MSPrintf(EUSCI_A0_BASE, "Successfully connect to WiFi\r\n"); //connected
+    //__delay_cycles(48000000);
 
     /*Start ESP8266 serial terminal, will not return*/
-    //ESP8266_Terminal();
+    ESP8266_Terminal();
 }

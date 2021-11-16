@@ -56,7 +56,10 @@
 
 /* Importing files */
 #include "PWM.h"
-#include "UART.h"
+#include "Ultrasonic.h"
+//#include "UART.h"
+
+#define MIN_DISTANCE 15.0f
 
 // Global Variable for Wheel. 20 = 1 round.
 volatile static uint32_t counter;
@@ -83,51 +86,65 @@ inline void uart_println(const char *str, ...)
     UCA0TXBUF = '\n';
 }
 
+static void Delay(uint32_t loop)
+{
+    volatile uint32_t i;
+
+    for (i = 0 ; i < loop ; i++);
+}
+
 int main(void)
 {
+    float foo;
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD; // Disable watchdog
 
     //init_wheel(BIT0, BIT1, BIT2, BIT3);     // Initialize Wheels
-    //printf("Wheels initialization completed");
+    //printf("Wheels initialization completed\n");
 
-    //init_PWM(BIT4, BIT6);                 // Output for PWMs
-    //printf("PWM initialization completed");
+    init_PWM();                 // Output for PWMs
 
-    //init_UART();                            // Initialize UART
-    //printf("UART initialization completed\r\n");
+    init_UART();                            // Initialize UART
+    printf("UART initialization completed\r\n");
 
-    printf("Before\r\n");
     init_ultrasonic();
-    printf("After");
-    printf("Ultrasonic initialization completed\r\n");
-
-    while (1) {
-
+    while (1)
+    {
+        Delay(100000);
+        foo = getHCSR04Distance();
+        /* Obtain distance from HCSR04 sensor and check if its less then minimum distance */
+        if ((foo < MIN_DISTANCE)) {
+            printf("NEAR: %d\n", (int) foo);
+            //slowDown();
+        }
+        else {
+            printf("FAR: %d\n", (int) foo);
+            //speedUp();
+        }
     }
 }
 
 // Port 2 ISR
 /*
-void PORT2_IRQHandler(void)
-{
-    // Local Variable to store status of Interrupt
-    int local;
+ void PORT2_IRQHandler(void)
+ {
+ // Local Variable to store status of Interrupt
+ int local;
 
-    // Storing state of interrupt flag onto local variable
-    local = P2->IFG;
+ // Storing state of interrupt flag onto local variable
+ local = P2->IFG;
 
-    // Increment Global Count Variable
-    counter++;
-    if (counter == 20)
-    {
-        uart_println("ASD");
-        // Toggle Pin
-        GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
-        counter = 0;
-        local = 0;
-    }
+ // Increment Global Count Variable
+ counter++;
+ if (counter == 20)
+ {
+ uart_println("ASD");
+ // Toggle Pin
+ GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
+ counter = 0;
+ local = 0;
+ }
 
-    // Clearing Interrupt Flag
-    GPIO_clearInterruptFlag(GPIO_PORT_P2, GPIO_PIN5);
-}
-*/
+ // Clearing Interrupt Flag
+ GPIO_clearInterruptFlag(GPIO_PORT_P2, GPIO_PIN5);
+ }
+ */

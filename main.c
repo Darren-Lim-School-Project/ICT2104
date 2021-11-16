@@ -114,11 +114,11 @@ int main(void)
         /* Obtain distance from HCSR04 sensor and check if its less then minimum distance */
         if ((foo < MIN_DISTANCE)) {
             printf("NEAR: %d\n", (int) foo);
-            //slowDown();
+            slowDown();
         }
         else {
             printf("FAR: %d\n", (int) foo);
-            //speedUp();
+            speedUp();
         }
     }
 }

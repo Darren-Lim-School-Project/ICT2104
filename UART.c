@@ -3,7 +3,7 @@
 #include <Hardware/UART_Driver.h>
 
 eUSCI_UART_ConfigV1 UART0Config = {
-        EUSCI_A_UART_CLOCKSOURCE_SMCLK, 13, 0, 37,
+        EUSCI_A_UART_CLOCKSOURCE_SMCLK, 1, 10, 0,
         EUSCI_A_UART_NO_PARITY,
         EUSCI_A_UART_LSB_FIRST,
         EUSCI_A_UART_ONE_STOP_BIT,
@@ -11,7 +11,7 @@ eUSCI_UART_ConfigV1 UART0Config = {
         EUSCI_A_UART_OVERSAMPLING_BAUDRATE_GENERATION };
 
 eUSCI_UART_ConfigV1 UART2Config = {
-        EUSCI_A_UART_CLOCKSOURCE_SMCLK, 13, 0, 37,
+        EUSCI_A_UART_CLOCKSOURCE_SMCLK, 1, 10, 0,
         EUSCI_A_UART_NO_PARITY,
         EUSCI_A_UART_LSB_FIRST,
         EUSCI_A_UART_ONE_STOP_BIT,
@@ -23,15 +23,15 @@ void init_UART()
     MAP_WDT_A_holdTimer();
 
     /*Ensure MSP432 is Running at 24 MHz*/
-    FlashCtl_setWaitState(FLASH_BANK0, 2);
-    FlashCtl_setWaitState(FLASH_BANK1, 2);
-    PCM_setCoreVoltageLevel(PCM_VCORE1);
+    //FlashCtl_setWaitState(FLASH_BANK0, 2);
+    //FlashCtl_setWaitState(FLASH_BANK1, 2);
+    //PCM_setCoreVoltageLevel(PCM_VCORE1);
 
-    //int a = CS_getSMCLK();
-    //printf("UART SMCLK: %d\n", a);
+    int a = CS_getSMCLK();
+    printf("UART SMCLK: %d\n", a);
 
 
-    CS_setDCOCenteredFrequency(CS_DCO_FREQUENCY_24);
+    //CS_setDCOCenteredFrequency(CS_DCO_FREQUENCY_24);
 
     /*Initialize required hardware peripherals for the ESP8266*/
     MAP_GPIO_setAsPeripheralModuleFunctionInputPin(
@@ -62,15 +62,15 @@ void init_UART()
 
     char *ESP8266_Data = ESP8266_GetBuffer();
 
-    //if (!ESP8266_ConnectToAP("Lim", "weiloowoov")) //keep trying to connect
+    if (!ESP8266_ConnectToAP("Lim", "weiloowoov")) //keep trying to connect
     //if (!ESP8266_ConnectToAP("SINGTEL-FD58", "weiloowoov")) //keep trying to connect
-    //{
-    //    MSPrintf(EUSCI_A0_BASE, ESP8266_Data);
-    //}
+    {
+        MSPrintf(EUSCI_A0_BASE, ESP8266_Data);
+    }
 
-    //MSPrintf(EUSCI_A0_BASE, "Successfully connect to WiFi\r\n"); //connected
-    //__delay_cycles(48000000);
+    MSPrintf(EUSCI_A0_BASE, "Successfully connect to WiFi\r\n"); //connected
+    __delay_cycles(48000000);
 
     /*Start ESP8266 serial terminal, will not return*/
-    ESP8266_Terminal();
+    //ESP8266_Terminal();
 }

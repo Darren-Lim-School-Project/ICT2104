@@ -71,6 +71,7 @@ void leftDirection(void)
     Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig);
     Timer_A_generatePWM(TIMER_A0_BASE, &pwm2Config);
     Delay(1000000);
+    forwardDirection();
 }
 
 void rightDirection(void)
@@ -80,6 +81,7 @@ void rightDirection(void)
     Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig);
     Timer_A_generatePWM(TIMER_A0_BASE, &pwm2Config);
     Delay(1000000);
+    forwardDirection();
 }
 
 void forwardDirection(void) {

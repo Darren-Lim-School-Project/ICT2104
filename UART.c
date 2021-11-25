@@ -113,6 +113,16 @@ void init_UART()
 
     MSPrintf(EUSCI_A0_BASE, "Turned on port 8080\r\n");
 
+    if (!ESP8266_ConnectToAP("KimVeryCute", "money888")) //keep trying to connect
+         {
+         MSPrintf(EUSCI_A0_BASE, ESP8266_Data);
+         }
+
+         MSPrintf(EUSCI_A0_BASE, "Successfully connect to WiFi\r\n"); //connected
+         __delay_cycles(48000000);
+
+    //ESP8266_Terminal();
+
     /*
      if (!ESP8266_ConnectToAP("Lim", "weiloowoov")) //keep trying to connect
      {

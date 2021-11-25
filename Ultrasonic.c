@@ -105,6 +105,7 @@ float getHCSR04Distance(void)
 
     /* Wait for positive-edge */
     while(GPIO_getInputPinValue(GPIO_PORT_P3, GPIO_PIN7) == 0);
+    GPIO_toggleOutputOnPin(GPIO_PORT_P2, GPIO_PIN0);
 
     /* Start Timer */
     SR04IntTimes = 0;

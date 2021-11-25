@@ -111,7 +111,7 @@ int main(void)
     GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN0);
     GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN1 | GPIO_PIN2);
 
-    //init_UART();                            // Initialize UART
+    init_UART();                            // Initialize UART
     //printf("UART initialization completed\r\n");
 
     init_ultrasonic();
@@ -121,23 +121,22 @@ int main(void)
     init_PWM();                 // Output for PWMs
     while (1)
     {
+        printf("In while\n");
         //Delay(100000);
         Delay(5000);
-        //GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN0);
-        //GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN1 | GPIO_PIN2);
-        //uartLoop();
-        //GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
+        uartLoop();
         foo = getHCSR04Distance();
-
-        //GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN1);
-        //GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN0 | GPIO_PIN2);
-
-        if (foo < MIN_DISTANCE && !getSlowSpeed()) {
+        //printf("Distance Recorded: %d\n", foo);
+        if (getHCSR04Distance() < MIN_DISTANCE) {
+            //printf("Distance: %d\n", foo);
             slowDown();
-        } else if (foo >= MIN_DISTANCE && getSlowSpeed()) {
-            //GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
+            GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
+            Delay(50000);
+        } else {
+            //printf("Distance: %d\n", foo);
             speedUp();
-            //Delay(10000000000);
+            GPIO_toggleOutputOnPin(GPIO_PORT_P2, GPIO_PIN1);
+            Delay(50000);
         }
     }
 }

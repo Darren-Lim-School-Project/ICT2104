@@ -150,7 +150,7 @@ bool ESP8266_GetIP(void)
 
 bool ESP8266_Port80(void)
 {
-    UART_Printf(EUSCI_A2_BASE, "AT+CIPSERVER=1,80\r\n");
+    UART_Printf(EUSCI_A2_BASE, "AT+CIPSERVER=1,8000\r\n");
     __delay_cycles(48000000);
     if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
     {
@@ -185,7 +185,7 @@ bool ESP8266_Close(char id)
 
 bool ESP8266_CloseConnection(void)
 {
-    UART_Printf(EUSCI_A2_BASE, "AT+CIPCLOSE=1,80\r\n");
+    UART_Printf(EUSCI_A2_BASE, "AT+CIPCLOSE=1,8000\r\n");
     __delay_cycles(48000000);
     if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
     {

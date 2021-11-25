@@ -14,6 +14,8 @@
 #define TCP                     0
 #define UDP                     1
 
+char ESP8266_Buffer[ESP8266_BUFFER_SIZE];
+
 bool ESP8266_CheckConnection(void);
 bool ESP8266_AvailableAPs(void);
 bool ESP8266_Disconnect(void);
@@ -28,5 +30,10 @@ char *ESP8266_GetBuffer(void);
 void ESP8266_HardReset(void);
 
 bool ESP8266_ChangeMode1(void);
+bool ESP8266_ChangeMode3(void);
+bool ESP8266_GetIP(void);
+bool ESP8266_Port80(void);
+bool  ESP8266_Close(char id);
+void ESP8266_ClearBuffer(void);
 
 #endif /* DEVICES_ESP8266_H_ */

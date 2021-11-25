@@ -59,6 +59,7 @@ UART.obj: C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdlib.
 UART.obj: C:/Users/darre/workspace_v10/IRAcer/Hardware/UART_Driver.h
 UART.obj: C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdio.h
 UART.obj: C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdarg.h
+UART.obj: C:/Users/darre/workspace_v10/IRAcer/PWM.h
 
 ../UART.c:
 
@@ -177,4 +178,6 @@ C:/Users/darre/workspace_v10/IRAcer/Hardware/UART_Driver.h:
 C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdio.h:
 
 C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdarg.h:
+
+C:/Users/darre/workspace_v10/IRAcer/PWM.h:
 

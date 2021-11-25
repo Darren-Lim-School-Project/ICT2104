@@ -7,6 +7,7 @@
 
 /* DriverLib Includes */
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
+#include <stdbool.h>
 #include <PWM.h>
 
 /* Timer_A PWM Configuration Parameter */
@@ -22,23 +23,12 @@ TIMER_A_CLOCKSOURCE_SMCLK,
                                  TIMER_A_CAPTURECOMPARE_REGISTER_4,
                                  TIMER_A_OUTPUTMODE_RESET_SET, 0 };
 
-/*
- void init_wheel(uint16_t rightWheelBackward, uint16_t rightWheelForward,
- uint16_t leftWheelForward, uint16_t leftWheelBackward)
- {
- P4DIR |= rightWheelBackward + rightWheelForward + leftWheelForward
- + leftWheelBackward; // Output for the 4 pins
- P2DIR |= BIT4+ BIT6 + BIT7;
+static void Delay(uint32_t loop)
+{
+    volatile uint32_t i;
 
- //P4OUT |= leftWheelForward;
- //P4OUT &= ~leftWheelBackward;]
- P4OUT &= ~(rightWheelBackward + rightWheelForward + leftWheelForward
- + leftWheelBackward); // To stop all 4 wheels
-
- P4OUT |= rightWheelForward;
-
- }
- */
+    for (i = 0 ; i < loop ; i++);
+}
 
 void init_PWM(void)
 {
@@ -72,4 +62,44 @@ void speedUp(void)
     pwm2Config.dutyCycle = 9000;
     Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig);
     Timer_A_generatePWM(TIMER_A0_BASE, &pwm2Config);
+}
+
+void leftDirection(void)
+{
+    pwmConfig.dutyCycle = 9000;
+    pwm2Config.dutyCycle = 3000;
+    Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig);
+    Timer_A_generatePWM(TIMER_A0_BASE, &pwm2Config);
+    Delay(1000000);
+}
+
+void rightDirection(void)
+{
+    pwmConfig.dutyCycle = 3000;
+    pwm2Config.dutyCycle = 9000;
+    Timer_A_generatePWM(TIMER_A0_BASE, &pwmConfig);
+    Timer_A_generatePWM(TIMER_A0_BASE, &pwm2Config);
+    Delay(1000000);
+}
+
+void forwardDirection(void) {
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN0 | GPIO_PIN3);
+    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN1 | GPIO_PIN2);
+    speedUp();
+}
+
+void reverseDirection(void)
+{
+    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0 | GPIO_PIN3);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN1 | GPIO_PIN2);
+    speedUp();
+}
+
+bool getSlowSpeed(void) {
+    //printf("dutyCycle: %d\n", pwmConfig.dutyCycle);
+    if (pwmConfig.dutyCycle == 2000 && pwm2Config.dutyCycle == 2000) {
+        return true;
+    } else {
+        return false;
+    }
 }

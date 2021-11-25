@@ -20,7 +20,7 @@
 #define AT_CIPSTATUS    "AT+CIPSTATUS\r\n"
 #define AT_CIPSTART     "AT+CIPSTART"
 #define AT_CIPSEND      "AT+CIPSEND"
-#define AT_CIPCLOSE     "AT+CIPSEND\r\n"
+#define AT_CIPCLOSE     "AT+CIPCLOSE\r\n"
 #define AT_CIFSR        "AT+CIFSR\r\n"
 #define AT_CIPMUX       "AT+CIPMUX"
 #define AT_CIPSERVER    "AT+CIPSTO\r\n"
@@ -29,7 +29,7 @@
 #define AT_CIUPDATE     "AT+CIUPDATE\r\n"
 #define IPD             "+IPD\r\n"
 
-char ESP8266_Buffer[ESP8266_BUFFER_SIZE];
+//char ESP8266_Buffer[ESP8266_BUFFER_SIZE];
 
 bool ESP8266_WaitForAnswer(uint32_t Tries)
 {
@@ -100,6 +100,92 @@ bool ESP8266_AvailableAPs(void)
 bool ESP8266_ChangeMode1(void)
 {
     UART_Printf(EUSCI_A2_BASE, "AT+CWMODE=1\r\n");
+    __delay_cycles(48000000);
+    if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
+    {
+        return false;
+    }
+
+    if(strstr(ESP8266_Buffer, "OK") == NULL)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ESP8266_ChangeMode3(void)
+{
+    UART_Printf(EUSCI_A2_BASE, "AT+CWMODE=3\r\n");
+    __delay_cycles(48000000);
+    if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
+    {
+        return false;
+    }
+
+    if(strstr(ESP8266_Buffer, "OK") == NULL)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ESP8266_GetIP(void)
+{
+    UART_Printf(EUSCI_A2_BASE, "AT+CIFSR\r\n");
+    __delay_cycles(48000000);
+    if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
+    {
+        return false;
+    }
+
+    if(strstr(ESP8266_Buffer, "OK") == NULL)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ESP8266_Port80(void)
+{
+    UART_Printf(EUSCI_A2_BASE, "AT+CIPSERVER=1,80\r\n");
+    __delay_cycles(48000000);
+    if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
+    {
+        return false;
+    }
+
+    if(strstr(ESP8266_Buffer, "OK") == NULL)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ESP8266_Close(char id)
+{
+    UART_Printf(EUSCI_A2_BASE, "AT+CIPCLOSE=%c\r\n", id);
+
+    //__delay_cycles(24000000);
+    if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
+    {
+        return false;
+    }
+
+    if(strstr(ESP8266_Buffer, "OK") == NULL)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ESP8266_CloseConnection(void)
+{
+    UART_Printf(EUSCI_A2_BASE, "AT+CIPCLOSE=1,80\r\n");
     __delay_cycles(48000000);
     if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
     {
@@ -272,6 +358,11 @@ void ESP8266_Terminal(void)
 char *ESP8266_GetBuffer(void)
 {
     return ESP8266_Buffer;
+}
+
+void ESP8266_ClearBuffer(void)
+{
+    memset(ESP8266_Buffer,0,sizeof(ESP8266_Buffer));
 }
 
 void ESP8266_HardReset(void)

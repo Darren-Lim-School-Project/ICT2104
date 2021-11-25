@@ -13,5 +13,10 @@ void init_PWM(void);
 void pwmLoop(void);
 void slowDown(void);
 void speedUp(void);
+void leftDirection(void);
+void rightDirection(void);
+void forwardDirection(void);
+void reverseDirection(void);
+bool getSlowSpeed(void);
 
 #endif /* PWM_H_ */

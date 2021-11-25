@@ -57,12 +57,13 @@
 /* Importing files */
 #include "PWM.h"
 #include "Ultrasonic.h"
-//#include "UART.h"
+#include "UART.h"
 
 #define MIN_DISTANCE 15.0f
 
 // Global Variable for Wheel. 20 = 1 round.
 volatile static uint32_t counter;
+float foo;
 
 inline void uart_println(const char *str, ...)
 {
@@ -95,30 +96,48 @@ static void Delay(uint32_t loop)
 
 int main(void)
 {
-    float foo;
+
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD; // Disable watchdog
 
     //init_wheel(BIT0, BIT1, BIT2, BIT3);     // Initialize Wheels
     //printf("Wheels initialization completed\n");
 
-    init_PWM();                 // Output for PWMs
 
-    init_UART();                            // Initialize UART
-    printf("UART initialization completed\r\n");
+    // Status pin
+    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0);
+
+    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN0 | GPIO_PIN1 | GPIO_PIN2);
+    GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN0);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN1 | GPIO_PIN2);
+
+    //init_UART();                            // Initialize UART
+    //printf("UART initialization completed\r\n");
 
     init_ultrasonic();
+    GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN1);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN0 | GPIO_PIN2);
+
+    init_PWM();                 // Output for PWMs
     while (1)
     {
-        Delay(100000);
+        //Delay(100000);
+        Delay(5000);
+        //GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN0);
+        //GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN1 | GPIO_PIN2);
+        //uartLoop();
+        //GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
         foo = getHCSR04Distance();
-        /* Obtain distance from HCSR04 sensor and check if its less then minimum distance */
-        if ((foo < MIN_DISTANCE)) {
-            printf("NEAR: %d\n", (int) foo);
+
+        //GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN1);
+        //GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN0 | GPIO_PIN2);
+
+        if (foo < MIN_DISTANCE && !getSlowSpeed()) {
             slowDown();
-        }
-        else {
-            printf("FAR: %d\n", (int) foo);
+        } else if (foo >= MIN_DISTANCE && getSlowSpeed()) {
+            //GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
             speedUp();
+            //Delay(10000000000);
         }
     }
 }

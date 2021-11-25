@@ -56,6 +56,7 @@ main.obj: C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdio.h
 main.obj: C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdarg.h
 main.obj: ../PWM.h
 main.obj: ../Ultrasonic.h
+main.obj: ../UART.h
 
 ../main.c:
 
@@ -168,4 +169,6 @@ C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stdarg.h:
 ../PWM.h:
 
 ../Ultrasonic.h:
+
+../UART.h:
 

@@ -8,7 +8,8 @@
 #ifndef UART_H_
 #define UART_H_
 
-
+static void Delay(uint32_t loop);
+void uartLoop(void);
 init_UART();
 
 

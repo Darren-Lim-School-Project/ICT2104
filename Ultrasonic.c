@@ -101,6 +101,8 @@ float getHCSR04Distance(void)
     Delay(30);
     GPIO_setOutputLowOnPin(GPIO_PORT_P3, GPIO_PIN6);
 
+    //GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
+
     /* Wait for positive-edge */
     while(GPIO_getInputPinValue(GPIO_PORT_P3, GPIO_PIN7) == 0);
 

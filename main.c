@@ -58,50 +58,33 @@
 #include "PWM.h"
 #include "Ultrasonic.h"
 #include "UART.h"
+#include "IRLine.h"
 
-#define MIN_DISTANCE 15.0f
+#define SAFE_DISTANCE 20.0f
+#define DANGER_DISTANCE 10.0f
 
 // Global Variable for Wheel. 20 = 1 round.
 volatile static uint32_t counter;
 float foo;
 
-inline void uart_println(const char *str, ...)
-{
-    static char print_buffer[256];
-    va_list lst;
-    va_start(lst, str);
-    vsnprintf(print_buffer, 256, str, lst);
-    str = print_buffer;
-    while (*str)
-    {
-        while (!(UCA0IFG & EUSCI_A_IFG_TXIFG))
-            ;
-        UCA0TXBUF = *str;
-        str++;
-    }
-    while (!(UCA0IFG & EUSCI_A_IFG_TXIFG))
-        ;
-    UCA0TXBUF = '\r';
-    while (!(UCA0IFG & EUSCI_A_IFG_TXIFG))
-        ;
-    UCA0TXBUF = '\n';
-}
-
 static void Delay(uint32_t loop)
 {
     volatile uint32_t i;
 
-    for (i = 0 ; i < loop ; i++);
+    for (i = 0; i < loop; i++)
+        ;
 }
+
+/*
+ * This is where everything starts
+ * Initialize all the components and enter a while(1) loop to keep the car running
+ */
 
 int main(void)
 {
 
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD; // Disable watchdog
-
-    //init_wheel(BIT0, BIT1, BIT2, BIT3);     // Initialize Wheels
-    //printf("Wheels initialization completed\n");
-
+    int sendDataCounter = 0;
 
     // Status pin
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
@@ -110,59 +93,67 @@ int main(void)
     GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN0 | GPIO_PIN1 | GPIO_PIN2);
     GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN0);
     GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN1 | GPIO_PIN2);
-
-    init_UART();                            // Initialize UART
-    //printf("UART initialization completed\r\n");
-
-    init_ultrasonic();
     GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN1);
     GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN0 | GPIO_PIN2);
 
-    init_PWM();                 // Output for PWMs
+    init_UART();
+    init_ultrasonic();
+    init_PWM();
+    init_Encoder();
+    IRSensorSetup();
     while (1)
     {
-        printf("In while\n");
-        //Delay(100000);
-        Delay(5000);
-        uartLoop();
-        foo = getHCSR04Distance();
-        //printf("Distance Recorded: %d\n", foo);
-        if (getHCSR04Distance() < MIN_DISTANCE) {
-            //printf("Distance: %d\n", foo);
-            slowDown();
-            GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
-            Delay(50000);
-        } else {
-            //printf("Distance: %d\n", foo);
-            speedUp();
-            GPIO_toggleOutputOnPin(GPIO_PORT_P2, GPIO_PIN1);
-            Delay(50000);
+        // If any side of the IR line detector has a trigger 1, then it will stop the car
+        if (GPIO_getInputPinValue(GPIO_PORT_P5, GPIO_PIN1) == 1
+                || GPIO_getInputPinValue(GPIO_PORT_P2, GPIO_PIN3) == 1)
+        {
+            Delay(100000);
+            //GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN0);
+            //GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN1);
+            //GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN2);
+            stop();
+            //GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN0);
+            //GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN1);
+            //GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN2);
+            //GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
         }
+        else
+        {
+            // Else it will enter this area to listen to any commands sent from web interface
+            Delay(5000);
+            uartLoop();
+
+            // To delay the sending or data over to web after 200 counts of sendDataCounter
+            sendDataCounter++;
+            if (sendDataCounter == 200)
+            {
+                sendData(1, foo);
+                sendDataCounter = 0;
+            }
+
+            // If distance to object is less than 10cm, the car will stop
+            // Else if the distance is less than 20cm, the car will slow down
+            // Else the car will resume at normal speed
+            foo = getHCSR04Distance();
+            if ((getHCSR04Distance() < DANGER_DISTANCE) && (!getSlowSpeed()))
+            {
+                stop();
+                //GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
+                Delay(50000);
+            }
+            else if ((getHCSR04Distance() < SAFE_DISTANCE) && (!getSlowSpeed()))
+            {
+                slowDown();
+                //GPIO_toggleOutputOnPin(GPIO_PORT_P2, GPIO_PIN1);
+                Delay(50000);
+            }
+            else
+            {
+                speedUp();
+                //GPIO_toggleOutputOnPin(GPIO_PORT_P2, GPIO_PIN1);
+                Delay(50000);
+            }
+        }
+
     }
 }
-
-// Port 2 ISR
-/*
- void PORT2_IRQHandler(void)
- {
- // Local Variable to store status of Interrupt
- int local;
-
- // Storing state of interrupt flag onto local variable
- local = P2->IFG;
-
- // Increment Global Count Variable
- counter++;
- if (counter == 20)
- {
- uart_println("ASD");
- // Toggle Pin
- GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
- counter = 0;
- local = 0;
- }
-
- // Clearing Interrupt Flag
- GPIO_clearInterruptFlag(GPIO_PORT_P2, GPIO_PIN5);
- }
- */

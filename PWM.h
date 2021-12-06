@@ -11,6 +11,7 @@
 //void init_wheel(uint16_t leftWheelForward, uint16_t leftWheelBackward, uint16_t rightWheelForward, uint16_t rightWheelBackward);
 void init_PWM(void);
 void pwmLoop(void);
+void stop(void);
 void slowDown(void);
 void speedUp(void);
 void leftDirection(void);

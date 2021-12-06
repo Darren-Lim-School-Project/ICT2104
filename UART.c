@@ -4,17 +4,18 @@
 #include <string.h>
 #include <PWM.h>
 
-/*We are connecting to api.themoviedb.org, ESP8266 can resolve DNS, pretty cool huh!*/
-char HTTP_WebPage[] = "192.168.1.101";
-/*HTTP is TCP port 80*/
+// IP Address of Web Server in the same network
+char HTTP_WebPage[] = "172.20.10.3";
+
+// Port number used by Web Server
 char Port[] = "8000";
-/*Data that will be sent to the HTTP server. This will allow us to query movie data. Get an api key from api.themoviedb.org*/
-char HTTP_Request[] = "GET /test.php?name=abc&age=2 HTTP/1.0\r\n\r\n";
+
+// Path to the file that will be receiving the data sent
+char HTTP_Request[] = "GET /src/mvc/view/receiver.php?speed=123 HTTP/1.0\r\n\r\n";
+
 /*Subtract one to account for the null character*/
 uint32_t HTTP_Request_Size = sizeof(HTTP_Request) - 1;
 
-const char *ssid = "IRAcer";
-const char *password = "123321";
 char* receivedData;
 
 eUSCI_UART_ConfigV1 UART0Config = {
@@ -44,15 +45,7 @@ static void Delay(uint32_t loop)
 void init_UART()
 {
     MAP_WDT_A_holdTimer();
-
-    /*Ensure MSP432 is Running at 24 MHz*/
-    //FlashCtl_setWaitState(FLASH_BANK0, 2);
-    //FlashCtl_setWaitState(FLASH_BANK1, 2);
-    //PCM_setCoreVoltageLevel(PCM_VCORE1);
     int a = CS_getSMCLK();
-    //printf("UART SMCLK: %d\n", a);
-
-    //CS_setDCOCenteredFrequency(CS_DCO_FREQUENCY_24);
 
     /*Initialize required hardware peripherals for the ESP8266*/
     MAP_GPIO_setAsPeripheralModuleFunctionInputPin(
@@ -77,25 +70,18 @@ void init_UART()
     /*Hard Reset ESP8266*/
     ESP8266_HardReset();
     __delay_cycles(48000000);
+    UART_Flush(EUSCI_A0_BASE);
     UART_Flush(EUSCI_A2_BASE);
+
     //ESP8266_Disconnect();
 
     char *ESP8266_Data = ESP8266_GetBuffer();
     receivedData = ESP8266_Data;
-    char keyword = "l";
 
-    /*
-     if (!ESP8266_GetIP()) {
-     MSPrintf(EUSCI_A0_BASE, ESP8266_Data);
-     }
-     */
-
-    //MSPrintf(EUSCI_A0_BASE, "Get IP: %s\r\n", ESP8266_Data);
     if (!ESP8266_ChangeMode1())
     {
         MSPrintf(EUSCI_A0_BASE, ESP8266_Data);
     }
-
     MSPrintf(EUSCI_A0_BASE, "Mode changed to 1\r\n");
 
     if (!ESP8266_EnableMultipleConnections(true))
@@ -103,26 +89,18 @@ void init_UART()
         MSPrintf(EUSCI_A0_BASE,
                  "Unable to connect establish multiple connection\n");
     }
-
     MSPrintf(EUSCI_A0_BASE, "Multiple connection enabled\r\n");
 
-    if (!ESP8266_Port80()) //keep trying to connect
+    if (!ESP8266_Port80())
     {
         MSPrintf(EUSCI_A0_BASE, ESP8266_Data);
     }
-
-    MSPrintf(EUSCI_A0_BASE, "Turned on port 8080\r\n");
-
-    if (!ESP8266_ConnectToAP("KimVeryCute", "money888")) //keep trying to connect
-         {
-         MSPrintf(EUSCI_A0_BASE, ESP8266_Data);
-         }
-
-         MSPrintf(EUSCI_A0_BASE, "Successfully connect to WiFi\r\n"); //connected
-         __delay_cycles(48000000);
+    UART_Write(EUSCI_A2_BASE,"AT+CIPSTO=3600\r\n",19);
+    MSPrintf(EUSCI_A0_BASE, "Turned on port 80\r\n");
 
     //ESP8266_Terminal();
 
+    // Commented the following as it is not needed after it had connected to the network
     /*
      if (!ESP8266_ConnectToAP("Lim", "weiloowoov")) //keep trying to connect
      {
@@ -151,57 +129,47 @@ void init_UART()
      */
 
     /*Start ESP8266 serial terminal, will not return*/
-
-    /*
-     while (1)
-     {
-     if (ESP8266_WaitForAnswer(1))
-     {
-     MSPrintf(EUSCI_A0_BASE, "Data Received: %s\n", ESP8266_Data);
-
-     if (strstr(ESP8266_GetBuffer(), "pin=") != NULL)
-     {
-     char holder = ESP8266_Data[34];
-
-     switch (ESP8266_Data[34]) {
-     case 'l':
-     leftDirection();
-     break;
-     case 'r':
-     rightDirection();
-     break;
-     case 'f':
-     forwardDirection();
-     break;
-     case 'b':
-     reverseDirection();
-     break;
-     }
-
-     if (strcmp(ESP8266_Data[18], '0') == 0)
-     {
-     //printf("0 detected\n");
-     if (ESP8266_Close(ESP8266_Data[18]))
-     {
-     MSPrintf(EUSCI_A0_BASE, ESP8266_Data);
-     }
-     }
-
-     ESP8266_ClearBuffer();
-     }
-     }
-     }
-
-     ESP8266_Terminal();
-     */
 }
 
+void sendData(int typesOfData, float value) {
+
+    // Can be expanded to other switch cases in the future update
+    switch(typesOfData) {
+    case 1:
+
+        // Establish a connection to the Web Server at connection ID 1
+        if(!ESP8266_EstablishConnection('1', TCP, HTTP_WebPage, Port)) {
+
+             // If connection cnanot be establish, this will be printed at console for debugging purpose
+             MSPrintf(EUSCI_A0_BASE, "Failed to connect to: %s\r\nERROR: %s\r\n", HTTP_WebPage, ESP8266_GetBuffer());
+             }
+        MSPrintf(EUSCI_A0_BASE, "Connected to: %s\r\n\r\n", HTTP_WebPage);
+
+        // After the connection has been establish, it will proceed to send data over to the web path
+        if(!ESP8266_SendData('1', HTTP_Request, HTTP_Request_Size))
+             {
+             MSPrintf(EUSCI_A0_BASE, "Failed to send: %s to %s \r\nError: %s\r\n", HTTP_Request, HTTP_WebPage, ESP8266_GetBuffer());
+             }
+        MSPrintf(EUSCI_A0_BASE, "Data sent: %s to %s\r\n\r\nESP8266 Data Received: %s\r\n", HTTP_Request, HTTP_WebPage, ESP8266_GetBuffer());
+        break;
+    }
+
+}
+
+
+// This loop was created for main to run, constantly listening for any input from the Web Server
 void uartLoop(void)
 {
+
+    // This will check if there are any data being sent from Web Server to car
     if (ESP8266_WaitForAnswer(1))
     {
         MSPrintf(EUSCI_A0_BASE, "Data Received: %s\n", receivedData);
 
+        /*
+         * It will check the received value has "pin=", which is part of the data that was being sent from Web Server, if yes, then read
+         * receivedData[34], which is the value that was input from Web Server
+         */
         if (strstr(ESP8266_GetBuffer(), "pin=") != NULL)
         {
             char holder = receivedData[34];
@@ -222,9 +190,11 @@ void uartLoop(void)
                 break;
             }
 
+            /*
+             * This will close the connection that was opened
+             */
             if (strcmp(receivedData[18], '0') == 0)
             {
-                //printf("0 detected\n");
                 if (ESP8266_Close(receivedData[18]))
                 {
                     MSPrintf(EUSCI_A0_BASE, receivedData);

@@ -7,6 +7,8 @@ CMD_SRCS += \
 ../msp432p401r.cmd 
 
 C_SRCS += \
+../Encoder.c \
+../IRLine.c \
 ../PWM.c \
 ../UART.c \
 ../Ultrasonic.c \
@@ -14,6 +16,8 @@ C_SRCS += \
 ../system_msp432p401r.c 
 
 C_DEPS += \
+./Encoder.d \
+./IRLine.d \
 ./PWM.d \
 ./UART.d \
 ./Ultrasonic.d \
@@ -21,6 +25,8 @@ C_DEPS += \
 ./system_msp432p401r.d 
 
 OBJS += \
+./Encoder.obj \
+./IRLine.obj \
 ./PWM.obj \
 ./UART.obj \
 ./Ultrasonic.obj \
@@ -28,6 +34,8 @@ OBJS += \
 ./system_msp432p401r.obj 
 
 OBJS__QUOTED += \
+"Encoder.obj" \
+"IRLine.obj" \
 "PWM.obj" \
 "UART.obj" \
 "Ultrasonic.obj" \
@@ -35,6 +43,8 @@ OBJS__QUOTED += \
 "system_msp432p401r.obj" 
 
 C_DEPS__QUOTED += \
+"Encoder.d" \
+"IRLine.d" \
 "PWM.d" \
 "UART.d" \
 "Ultrasonic.d" \
@@ -42,6 +52,8 @@ C_DEPS__QUOTED += \
 "system_msp432p401r.d" 
 
 C_SRCS__QUOTED += \
+"../Encoder.c" \
+"../IRLine.c" \
 "../PWM.c" \
 "../UART.c" \
 "../Ultrasonic.c" \

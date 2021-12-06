@@ -14,7 +14,7 @@
     $(document).ready(function() {
       $(".direction").click(function() {
         var d = $(this).attr('id');
-        $.get("http://192.168.1.17:8000/", {pin:d});
+        $.get("http://192.168.1.142:8000/", {pin:d});
       });
     });
   </script>

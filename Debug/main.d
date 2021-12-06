@@ -57,6 +57,7 @@ main.obj: /Applications/TI/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include/stda
 main.obj: ../PWM.h
 main.obj: ../Ultrasonic.h
 main.obj: ../UART.h
+main.obj: ../IRLine.h
 
 ../main.c:
 
@@ -171,4 +172,6 @@ main.obj: ../UART.h
 ../Ultrasonic.h:
 
 ../UART.h:
+
+../IRLine.h:
 

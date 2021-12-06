@@ -11,6 +11,7 @@
 static void Delay(uint32_t loop);
 void uartLoop(void);
 init_UART();
+void sendData(int typesOfData, float value);
 
 
 #endif /* UART_H_ */

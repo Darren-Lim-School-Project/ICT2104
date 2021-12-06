@@ -8,6 +8,8 @@ GEN_OPTS__FLAG :=
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
+"./Encoder.obj" \
+"./IRLine.obj" \
 "./PWM.obj" \
 "./UART.obj" \
 "./Ultrasonic.obj" \
@@ -174,8 +176,8 @@ IRAcer.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "PWM.obj" "UART.obj" "Ultrasonic.obj" "main.obj" "system_msp432p401r.obj" "Devices/ESP8266.obj" "Devices/MSPIO.obj" "Hardware/CS_Driver.obj" "Hardware/GPIO_Driver.obj" "Hardware/UART_Driver.obj" "ccs/startup_msp432p401r_ccs.obj" 
-	-$(RM) "PWM.d" "UART.d" "Ultrasonic.d" "main.d" "system_msp432p401r.d" "Devices/ESP8266.d" "Devices/MSPIO.d" "Hardware/CS_Driver.d" "Hardware/GPIO_Driver.d" "Hardware/UART_Driver.d" "ccs/startup_msp432p401r_ccs.d" 
+	-$(RM) "Encoder.obj" "IRLine.obj" "PWM.obj" "UART.obj" "Ultrasonic.obj" "main.obj" "system_msp432p401r.obj" "Devices/ESP8266.obj" "Devices/MSPIO.obj" "Hardware/CS_Driver.obj" "Hardware/GPIO_Driver.obj" "Hardware/UART_Driver.obj" "ccs/startup_msp432p401r_ccs.obj" 
+	-$(RM) "Encoder.d" "IRLine.d" "PWM.d" "UART.d" "Ultrasonic.d" "main.d" "system_msp432p401r.d" "Devices/ESP8266.d" "Devices/MSPIO.d" "Hardware/CS_Driver.d" "Hardware/GPIO_Driver.d" "Hardware/UART_Driver.d" "ccs/startup_msp432p401r_ccs.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

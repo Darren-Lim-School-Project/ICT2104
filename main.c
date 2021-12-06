@@ -108,14 +108,8 @@ int main(void)
                 || GPIO_getInputPinValue(GPIO_PORT_P2, GPIO_PIN3) == 1)
         {
             Delay(100000);
-            //GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN0);
-            //GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN1);
-            //GPIO_setOutputHighOnPin(GPIO_PORT_P2, GPIO_PIN2);
             stop();
-            //GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN0);
-            //GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN1);
-            //GPIO_setOutputLowOnPin(GPIO_PORT_P2, GPIO_PIN2);
-            //GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
+            GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
         }
         else
         {

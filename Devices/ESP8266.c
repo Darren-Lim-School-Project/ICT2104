@@ -148,7 +148,7 @@ bool ESP8266_GetIP(void)
     return true;
 }
 
-bool ESP8266_Port80(void)
+bool ESP8266_Port8000(void)
 {
     UART_Printf(EUSCI_A2_BASE, "AT+CIPSERVER=1,8000\r\n");
     __delay_cycles(48000000);

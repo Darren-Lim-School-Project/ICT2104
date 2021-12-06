@@ -64,26 +64,18 @@ void TA1_0_IRQHandler(void)
     encoderTimes++;
 
 
-    if (encoderTimes == 100) {
+    if (encoderTimes == 1000) {
         float rightrpm = ((float)rightrotation/20) *60;
         float leftrpm = ((float)leftrotation/20) *60;
 
-        printf("Right Rotation: %d\n", rightrotation);
-        printf("Left Rotation: %d\n", leftrotation);
         rightrotation=0;
         leftrotation=0;
-        printf("Right RPM: %.2f\t", rightrpm);
         float rightspeed = rightrpm * (diameter/2.54) * M_PI * ((float)60/63360);
-        printf("Right mph: %.2f\t", rightspeed);
-
-        printf("Left RPM: %.2f\t", leftrpm);
-        float leftspeed = leftrpm * (diameter/2.54) * M_PI * ((float)60/63360);
-        printf("Left mph: %.2f\t", leftspeed);
-        float distance = ((rightrpm+leftrpm)/2) * (diameter/2.54) * M_PI;
-        printf("Distance traveled: %.2f\n", distance);
+        //float leftspeed = leftrpm * (diameter/2.54) * M_PI * ((float)60/63360);
+        //float distance = ((rightrpm+leftrpm)/2) * (diameter/2.54) * M_PI;
+        float distance = (rightrpm) * (diameter/2.54) * M_PI;
 
         encoderTimes=0;
-    GPIO_toggleOutputOnPin(GPIO_PORT_P1, GPIO_PIN0);
     }
 
     /* Clear interrupt flag */
